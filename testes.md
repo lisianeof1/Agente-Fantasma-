@@ -61,3 +61,16 @@ Os seguintes testes serão realizados após a integração dos arquivos de cená
 | `mostrar_acao(usar(espelho_biblioteca)).` | Informar que o espelho foi usado para recuperar energia | Passou. |
 | `mostrar_acao(barulho(cozinha)).` | Informar que o fantasma fez barulho na cozinha | Passou. |
 | `mostrar_acao(mover(sala, corredor)).` | Informar que o fantasma se moveu da sala para o corredor | Passou. |
+
+
+## 5. Verificação de consistência dos cenários
+
+| Teste | Resultado esperado | Resultado obtido |
+|---|---|---|
+| Porta e conexão | A porta corresponde a uma conexão declarada no cenário desafiador | Passou. A porta corresponde à conexão da biblioteca para o quarto. |
+| Móvel e conexão | O móvel bloqueia uma conexão declarada no cenário desafiador | Passou. O armário bloqueia a passagem do corredor para a cozinha. |
+| Objeto especial e porta | O efeito do quadro referencia uma porta existente | Passou. O quadro está associado à abertura da porta do quarto. |
+| Quarto isolado | Não existem conexões de entrada ou saída para o quarto isolado | Passou. O quarto isolado não possui conexões declaradas. |
+| Cenário ativo | O programa identifica o cenário selecionado | Passou. O cenário simples foi identificado corretamente. |
+
+Essas verificações confirmam a consistência dos fatos declarados. Elas não comprovam, por si só, que o algoritmo de busca encontra os planos corretos ou que todas as regras do jogo funcionam.
