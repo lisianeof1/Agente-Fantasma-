@@ -72,24 +72,31 @@ mostrar_acao(Acao) :-
 % MOSTRAR TODAS AS ACOES DO PLANO
 % ==========================================
 
-% Caso a lista esteja vazia
-mostrar_plano([]) :-
+% Inicia a numeracao das acoes em 1
+mostrar_plano(Plano) :-
+    mostrar_plano(Plano, 1).
+
+% Quando a lista termina
+mostrar_plano([], _) :-
     writeln('Fim do plano.').
 
-% Caso ainda existam acoes na lista
-mostrar_plano([Acao | Restantes]) :-
+% Mostra a acao atual e continua com as restantes
+mostrar_plano([Acao | Restantes], Numero) :-
+    format('~d. ', [Numero]),
     mostrar_acao(Acao),
-    mostrar_plano(Restantes).
+    Proximo is Numero + 1,
+    mostrar_plano(Restantes, Proximo).
 
 
 % ==========================================
-% APRESENTAR OS RESULTADOS DA BUSCA
+% APRESENTAR UMA SOLUCAO ENCONTRADA
 % ==========================================
 
-% Apresenta uma solucao encontrada
 mostrar_solucao(Plano, Custo) :-
     writeln(''),
     writeln('========== PLANO ENCONTRADO =========='),
+    length(Plano, Quantidade),
+    format('Quantidade de acoes: ~d~n~n', [Quantidade]),
     mostrar_plano(Plano),
     format(
         'Custo total do plano: ~w unidades de energia.~n',
