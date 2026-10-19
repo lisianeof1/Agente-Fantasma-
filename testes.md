@@ -116,3 +116,17 @@ Com os custos e os valores de susto propostos, o custo acumulado das ações é 
 ### Observação
 
 Essas sequências são planejamentos manuais para conferir a viabilidade dos cenários. Elas não são resultados produzidos pelo algoritmo de busca.
+
+
+## 8. Teste da saída condicionada ao cenário ativo
+
+Foram realizados testes temporários para verificar se a função `executar/0` encaminha corretamente os resultados de acordo com o cenário selecionado.
+
+| Cenário ativo | Resultado esperado | Resultado obtido |
+|---|---|---|
+| Simples | Exibir o plano simulado, o custo informado e a mensagem de vitória | Passou. O plano de cinco ações e o custo simulado de 8 foram apresentados. |
+| Impossível | Exibir a mensagem de ausência de solução | Passou. A simulação não retornou um plano e a mensagem de ausência de solução foi apresentada. |
+
+**Limitação:** os testes utilizaram uma implementação temporária de `resolver/2`, condicionada ao cenário ativo. Eles verificam o encaminhamento dos resultados pela função de saída, mas não comprovam o funcionamento do algoritmo de busca nem a impossibilidade do terceiro cenário.
+
+A implementação temporária deverá ser removida antes da integração com a busca real.
