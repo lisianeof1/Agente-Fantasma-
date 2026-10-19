@@ -104,3 +104,18 @@ mostrar_sem_solucao :-
     writeln(
         'Nao foi encontrada uma sequencia de acoes capaz de fazer todos os moradores fugirem neste cenario.'
     ).
+
+% ==========================================
+% EXECUCAO COMPLETA DO AGENTE
+% ==========================================
+
+executar :-
+    cenario_ativo(Cenario),
+    format('~nCenario selecionado: ~w~n', [Cenario]),
+    (
+        resolver(Plano, Custo)
+        ->
+        mostrar_solucao(Plano, Custo)
+        ;
+        mostrar_sem_solucao
+    ).
