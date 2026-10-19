@@ -74,3 +74,45 @@ Os seguintes testes serão realizados após a integração dos arquivos de cená
 | Cenário ativo | O programa identifica o cenário selecionado | Passou. O cenário simples foi identificado corretamente. |
 
 Essas verificações confirmam a consistência dos fatos declarados. Elas não comprovam, por si só, que o algoritmo de busca encontra os planos corretos ou que todas as regras do jogo funcionam.
+
+
+## 6. Verificação manual de viabilidade dos cenários
+
+### Cenário simples
+
+Foi analisada manualmente uma sequência de ações para assustar a moradora Maria até que ela fugisse.
+
+Sequência proposta:
+1. Mover da sala para o corredor.
+2. Mover do corredor para a cozinha.
+3. Derrubar o vaso.
+4. Fazer barulho na cozinha.
+5. Derrubar o brinquedo.
+
+Com os custos e os valores de susto definidos no projeto, a sequência gasta 8 unidades de energia e termina com 2 unidades disponíveis. Maria recebe 3 pontos de susto ao ser atingida pelo primeiro objeto, chega a 5 pontos após o barulho e foge ao receber o susto do segundo objeto, considerando o bônus por tremor e o limite de 8 pontos.
+
+**Situação:** viabilidade verificada manualmente; falta validar o resultado com a busca integrada.
+
+### Cenário desafiador
+
+Foi analisada manualmente uma sequência de ações para liberar as passagens e fazer Ana e Bruno fugirem.
+
+Sequência proposta:
+1. Derrubar o quadro especial para abrir a porta do quarto.
+2. Mover da sala para o corredor.
+3. Remover o armário.
+4. Mover para a cozinha.
+5. Mover para a biblioteca.
+6. Usar o espelho.
+7. Mover para o quarto.
+8. Derrubar o vaso.
+9. Derrubar o livro.
+10. Fazer barulho no quarto.
+
+Com os custos e os valores de susto propostos, o custo acumulado das ações é de 14 unidades de energia. O fantasma começa com 10 unidades, recupera 5 no espelho e termina com 1 unidade disponível. Ana e Bruno chegam ao limiar de fuga após o barulho, considerando o bônus por tremor e o limite de 8 pontos.
+
+**Situação:** viabilidade verificada manualmente, condicionada à implementação correta da abertura da porta especial e da atualização dos sustos. Falta validar o resultado com a busca integrada.
+
+### Observação
+
+Essas sequências são planejamentos manuais para conferir a viabilidade dos cenários. Elas não são resultados produzidos pelo algoritmo de busca.
