@@ -130,3 +130,16 @@ Foram realizados testes temporários para verificar se a função `executar/0` e
 **Limitação:** os testes utilizaram uma implementação temporária de `resolver/2`, condicionada ao cenário ativo. Eles verificam o encaminhamento dos resultados pela função de saída, mas não comprovam o funcionamento do algoritmo de busca nem a impossibilidade do terceiro cenário.
 
 A implementação temporária deverá ser removida antes da integração com a busca real.
+
+
+## 9. Melhoria na apresentação do plano
+
+A saída em linguagem natural foi aprimorada para numerar as ações e informar a quantidade total de ações do plano.
+
+| Teste | Resultado esperado | Resultado obtido |
+|---|---|---|
+| Numeração das ações | Exibir as ações sequencialmente, começando em 1 | Passou. As ações foram exibidas com numeração sequencial. |
+| Contagem das ações | Informar a quantidade de elementos do plano | Passou. A quantidade de ações foi apresentada corretamente. |
+| Apresentação completa | Mostrar plano, quantidade de ações, custo e mensagem de conclusão | Passou. Todas as informações foram exibidas corretamente. |
+
+O teste utilizou uma lista de ações e um custo fornecidos manualmente. A busca real ainda precisa ser integrada para validar o resultado produzido pelo agente.
