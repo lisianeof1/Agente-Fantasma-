@@ -51,3 +51,13 @@ Os seguintes testes serão realizados após a integração dos arquivos de cená
 - Verificar se o resultado final confirma a fuga de todos os moradores.
 - Registrar as consultas e saídas reais do programa integrado.
 
+## 4. Testes individuais das traduções de ações
+
+| Consulta | Resultado esperado | Resultado obtido |
+|---|---|---|
+| `mostrar_acao(derrubar(quadro_chave)).` | Informar que o quadro foi derrubado e a porta especial foi aberta | Passou.  |
+| `mostrar_acao(remover(armario)).` | Informar que o armário foi removido e a passagem foi liberada | Passou. |
+| `mostrar_acao(arrombar(porta_quarto)).` | Informar que a porta foi arrombada | Passou. |
+| `mostrar_acao(usar(espelho_biblioteca)).` | Informar que o espelho foi usado para recuperar energia | Passou. |
+| `mostrar_acao(barulho(cozinha)).` | Informar que o fantasma fez barulho na cozinha | Passou. |
+| `mostrar_acao(mover(sala, corredor)).` | Informar que o fantasma se moveu da sala para o corredor | Passou. |
