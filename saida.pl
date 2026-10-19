@@ -80,3 +80,27 @@ mostrar_plano([]) :-
 mostrar_plano([Acao | Restantes]) :-
     mostrar_acao(Acao),
     mostrar_plano(Restantes).
+
+
+% ==========================================
+% APRESENTAR OS RESULTADOS DA BUSCA
+% ==========================================
+
+% Apresenta uma solucao encontrada
+mostrar_solucao(Plano, Custo) :-
+    writeln(''),
+    writeln('========== PLANO ENCONTRADO =========='),
+    mostrar_plano(Plano),
+    format(
+        'Custo total do plano: ~w unidades de energia.~n',
+        [Custo]
+    ),
+    writeln('VITORIA! Todos os moradores fugiram!'),
+    writeln('======================================').
+
+% Apresenta uma mensagem quando nao ha solucao
+mostrar_sem_solucao :-
+    writeln(''),
+    writeln(
+        'Nao foi encontrada uma sequencia de acoes capaz de fazer todos os moradores fugirem neste cenario.'
+    ).
