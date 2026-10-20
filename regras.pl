@@ -19,7 +19,7 @@
 %   [x] 1. Arquivos base e atalhos do cenario ativo
 %   [x] 2. estado_inicial/1 e objetivo/1
 %   [x] 3. porta_aberta/2, bloqueada/3 e passagem_livre/3
-%   [ ] 4. acoes sem susto: mover, usar, remover, arrombar
+%   [x] 4. acoes sem susto: mover, usar, remover, arrombar
 %   [ ] 5. susto: distancia, pontos e atualizacao de Sustos
 %   [ ] 6. acoes de susto: barulho e derrubar
 % =====================================================================
@@ -140,10 +140,81 @@ bloqueada(De, Para, Feitos) :-
 
 %% passagem_livre(+De, +Para, +Feitos)
 %  O fantasma pode ir de De para Para: a ligacao existe e nada bloqueia.
-%  (E esta regra que a acao mover/2 usara na etapa 4.)
+%  (E esta regra que a acao mover/2 usa na etapa 4.)
 passagem_livre(De, Para, Feitos) :-
     conecta(De, Para),
     \+ bloqueada(De, Para, Feitos).
+
+% ---------------------------------------------------------------------
+% ETAPA 4: acoes sem susto (mover, usar, remover, arrombar)
+% ---------------------------------------------------------------------
+% acao(+Estado, ?Acao, -NovoEstado, -Custo)
+%   Uma clausula por tipo de acao. Em backtracking entrega uma
+%   possibilidade por vez; se Acao ja vier escolhida (ex.: mover(sala,
+%   corredor)), so a clausula daquele tipo casa e sai um unico resultado.
+%   Custo = so o custo DESTA acao (a soma total e feita pela busca).
+%   Toda acao com custo exige Energia >= Custo.
+
+%% mover(Origem, Destino)
+%  Pre : fantasma na Origem, passagem livre ate o Destino.
+%  Faz : fantasma vai para o Destino. Sustos e Feitos nao mudam.
+acao(estado(Origem, Energia, Sustos, Feitos),
+     mover(Origem, Destino),
+     estado(Destino, Energia1, Sustos, Feitos),
+     Custo) :-
+    custo(mover, Custo),
+    Energia >= Custo,
+    passagem_livre(Origem, Destino, Feitos),
+    Energia1 is Energia - Custo.
+
+%% usar(Espelho)
+%  Pre : fantasma no comodo do espelho, espelho ainda nao usado e
+%        energia abaixo do maximo (evita desperdicio).
+%  Faz : energia sobe 'recarga' pontos, sem passar de energia_max;
+%        usado(Espelho) entra em Feitos. Custo 0.
+acao(estado(Comodo, Energia, Sustos, Feitos),
+     usar(Espelho),
+     estado(Comodo, Energia1, Sustos, Feitos1),
+     Custo) :-
+    custo(usar, Custo),
+    Energia >= Custo,
+    param(energia_max, Max),
+    Energia < Max,
+    espelho(Espelho, Comodo),
+    \+ memberchk(usado(Espelho), Feitos),
+    param(recarga, Recarga),
+    Energia1 is min(Energia + Recarga, Max),
+    ord_add_element(Feitos, usado(Espelho), Feitos1).
+
+%% remover(Movel)
+%  Pre : fantasma no comodo de ORIGEM da passagem do movel e o
+%        movel ainda nao foi removido.
+%  Faz : removido(Movel) entra em Feitos.
+acao(estado(Comodo, Energia, Sustos, Feitos),
+     remover(Movel),
+     estado(Comodo, Energia1, Sustos, Feitos1),
+     Custo) :-
+    custo(remover, Custo),
+    Energia >= Custo,
+    movel(Movel, Comodo, _),
+    \+ memberchk(removido(Movel), Feitos),
+    Energia1 is Energia - Custo,
+    ord_add_element(Feitos, removido(Movel), Feitos1).
+
+%% arrombar(Porta)
+%  Pre : fantasma no comodo de ORIGEM da passagem da porta e a porta
+%        ainda fechada (nem arrombada, nem aberta pelo objeto-chave).
+%  Faz : arrombada(Porta) entra em Feitos.
+acao(estado(Comodo, Energia, Sustos, Feitos),
+     arrombar(Porta),
+     estado(Comodo, Energia1, Sustos, Feitos1),
+     Custo) :-
+    custo(arrombar, Custo),
+    Energia >= Custo,
+    porta(Porta, Comodo, _),
+    \+ porta_aberta(Porta, Feitos),
+    Energia1 is Energia - Custo,
+    ord_add_element(Feitos, arrombada(Porta), Feitos1).
 
 % ---------------------------------------------------------------------
 % (as proximas etapas entram aqui)
