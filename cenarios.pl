@@ -1,16 +1,14 @@
+% Fatos dos tres cenarios do Agente Fantasma.
+% As regras usam o identificador do cenario para consultar somente
+% os comodos, moradores e objetos da configuracao selecionada.
 
-% ==========================================
-% CENARIO ATIVO
-% Deixe apenas uma linha ativa.
-% ==========================================
-
-cenario_ativo(simples).
-% cenario_ativo(desafiador).
-% cenario_ativo(impossivel).
+% Cenario selecionado ao carregar este arquivo.
+% Para executar outro cenario, use definir_cenario(Id) nas consultas.
+cenario_ativo(desafiador).
 
 
 % ==========================================
-% COMODOS DOS CENARIOS
+% COMODOS
 % ==========================================
 
 comodo(simples, sala).
@@ -30,20 +28,18 @@ comodo(impossivel, quarto_isolado).
 
 % ==========================================
 % CONEXOES DIRECIONADAS
-% Uma conexao A -> B nao cria B -> A.
+% Cada fato permite atravessar somente de De para Para.
+% Para permitir a volta, seria preciso declarar outra conexao.
 % ==========================================
 
-% Cenario simples
 conecta(simples, sala, corredor).
 conecta(simples, corredor, cozinha).
 
-% Cenario desafiador
 conecta(desafiador, sala, corredor).
 conecta(desafiador, corredor, cozinha).
 conecta(desafiador, cozinha, biblioteca).
 conecta(desafiador, biblioteca, quarto).
 
-% Cenario impossivel
 conecta(impossivel, sala, corredor).
 
 
@@ -57,7 +53,7 @@ inicio(impossivel, sala).
 
 
 % ==========================================
-% MORADORES E POSICOES INICIAIS
+% MORADORES
 % ==========================================
 
 morador(simples, maria, cozinha).
@@ -70,15 +66,15 @@ morador(impossivel, joao, quarto_isolado).
 
 % ==========================================
 % OBJETOS DERRUBAVEIS
-% EFEITO "nenhum" = objeto comum
-% EFEITO "abre(Porta)" = objeto especial
+% O ultimo argumento indica se o objeto abre uma porta.
 % ==========================================
 
-% Cenario simples
+% No cenario simples, os dois objetos sao comuns.
 objeto(simples, vaso, cozinha, nenhum).
 objeto(simples, brinquedo, cozinha, nenhum).
 
-% Cenario desafiador
+% No desafiador, o quadro abre a porta do quarto.
+% Os outros dois objetos sao comuns.
 objeto(desafiador, quadro_chave, sala, abre(porta_quarto)).
 objeto(desafiador, vaso_quarto, quarto, nenhum).
 objeto(desafiador, livro_quarto, quarto, nenhum).
@@ -86,7 +82,7 @@ objeto(desafiador, livro_quarto, quarto, nenhum).
 
 % ==========================================
 % PORTAS
-% A regra do jogo deve controlar se estao abertas.
+% A porta declarada comeca fechada.
 % ==========================================
 
 porta(desafiador, porta_quarto, biblioteca, quarto).
@@ -104,4 +100,3 @@ movel(desafiador, armario, corredor, cozinha).
 % ==========================================
 
 espelho(desafiador, espelho_biblioteca, biblioteca).
-
