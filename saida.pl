@@ -1,14 +1,20 @@
 % ==========================================
 % SAIDA EM LINGUAGEM NATURAL
 % ==========================================
-% Este arquivo transforma as acoes do plano em mensagens faceis de ler.
-% Tambem apresenta o plano, o custo acumulado e o resultado da busca.
+% Este arquivo traduz as acoes e apresenta os resultados da busca.
+% Tambem mostra os comodos e as passagens do cenario antes do plano.
 %
-% A selecao do cenario pode ser feita de duas formas:
-%   executar(desafiador).  seleciona e executa esse cenario
-%   executar.              executa o cenario que ja esta ativo
+% Para selecionar e executar um cenario, use:
+%   executar(simples).
+%   executar(desafiador).
+%   executar(impossivel).
 %
-% A busca precisa fornecer resolver(Plano, Custo).
+% Para executar o cenario que ja esta ativo, use:
+%   executar.
+
+% ==========================================
+% TRADUCAO DAS ACOES
+% ==========================================
 
 % Traduz uma acao de movimento.
 mostrar_acao(mover(Origem, Destino)) :-
@@ -76,12 +82,67 @@ mostrar_acao(usar(Espelho)) :-
     ),
     !.
 
-% Esta mensagem aparece apenas se nenhuma traducao acima servir.
+% Esta mensagem aparece somente se nenhuma traducao acima servir.
 mostrar_acao(Acao) :-
     format(
         'Acao ainda sem traducao: ~w.~n',
         [Acao]
     ).
+
+
+% ==========================================
+% MOSTRAR O MAPA DO CENARIO
+% ==========================================
+
+% Mostra os comodos, as passagens e os moradores.
+mostrar_cenario(Cenario) :-
+    nl,
+    format('Casa do cenario ~w~n', [Cenario]),
+
+    findall(Comodo, comodo(Cenario, Comodo), Comodos),
+    format('Comodos: ~w~n', [Comodos]),
+
+    writeln('Passagens direcionadas:'),
+    findall(
+        passagem(De, Para),
+        conecta(Cenario, De, Para),
+        Passagens
+    ),
+    (
+        Passagens = []
+    ->
+        writeln('  Nenhuma passagem declarada.')
+    ;
+        mostrar_passagens(Passagens)
+    ),
+
+    writeln('Moradores e seus comodos:'),
+    findall(
+        morador(Nome, Comodo),
+        morador(Cenario, Nome, Comodo),
+        Moradores
+    ),
+        (
+        Moradores = []
+    ->
+        writeln('  Nenhum morador declarado.')
+    ;
+        mostrar_moradores(Moradores)
+    ).
+
+% Mostra cada passagem como origem -> destino.
+mostrar_passagens([]).
+
+mostrar_passagens([passagem(De, Para) | Restantes]) :-
+    format('  ~w -> ~w~n', [De, Para]),
+    mostrar_passagens(Restantes).
+
+% Mostra cada morador e o comodo onde comeca.
+mostrar_moradores([]).
+
+mostrar_moradores([morador(Nome, Comodo) | Restantes]) :-
+    format('  ~w esta em ~w.~n', [Nome, Comodo]),
+    mostrar_moradores(Restantes).
 
 
 % ==========================================
@@ -142,14 +203,14 @@ executar :-
     ).
 
 % Seleciona explicitamente um cenario e depois executa a busca.
-% Exemplos: executar(simples), executar(desafiador), executar(impossivel).
 executar(Cenario) :-
     definir_cenario(Cenario),
     executar_cenario(Cenario).
 
-% Mostra qual cenario esta sendo executado e apresenta o resultado.
+% Primeiro mostra o cenario e o mapa; depois executa a busca.
 executar_cenario(Cenario) :-
     format('~nCenario selecionado: ~w~n', [Cenario]),
+    mostrar_cenario(Cenario),
     (   resolver(Plano, Custo)
     ->  mostrar_solucao(Plano, Custo)
     ;   mostrar_sem_solucao
