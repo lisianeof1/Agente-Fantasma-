@@ -16,8 +16,8 @@
 %   definir_cenario(+Id)      (a Pessoa 3 pode usar na executar/1)
 %
 % ETAPAS:
-%   [x] 1. Arquivos base e atalhos do cenario ativo   <-- este arquivo
-%   [ ] 2. estado_inicial/1 e objetivo/1
+%   [x] 1. Arquivos base e atalhos do cenario ativo
+%   [x] 2. estado_inicial/1 e objetivo/1
 %   [ ] 3. porta_aberta/2 e bloqueada/3
 %   [ ] 4. acoes sem susto: mover, usar, remover, arrombar
 %   [ ] 5. susto: distancia, pontos e atualizacao de Sustos
@@ -85,5 +85,30 @@ espelho(Id, Comodo) :-
     cenario_ativo(C), espelho(C, Id, Comodo).
 
 % ---------------------------------------------------------------------
+% ETAPA 2: estado inicial e teste de objetivo
+% ---------------------------------------------------------------------
+
+%% estado_inicial(-Estado)
+%  Monta a primeira "foto" do jogo, de onde a busca comeca:
+%    - Comodo : o comodo de inicio/1 do cenario ativo
+%    - Energia: energia_inicial (config.pl)
+%    - Sustos : todos os moradores com 0 pontos, em ordem alfabetica
+%    - Feitos : vazio, porque ainda nao foi feito nada
+%  Exemplo: estado(sala, 10, [ana-0], [])
+estado_inicial(estado(Comodo, Energia, Sustos, [])) :-
+    once(inicio(Comodo)),
+    param(energia_inicial, Energia),
+    findall(Nome-0, morador(Nome, _), Sustos0),
+    sort(Sustos0, Sustos).
+
+%% objetivo(+Estado)
+%  Verdadeiro quando TODOS os moradores chegaram a susto_max pontos
+%  (ou seja, todos fugiram). Basta um morador abaixo disso para ser falso.
+objetivo(estado(_, _, Sustos, _)) :-
+    param(susto_max, Max),
+    forall(member(_-Pontos, Sustos), Pontos >= Max).
+
+% ---------------------------------------------------------------------
 % (as proximas etapas entram aqui)
 % ---------------------------------------------------------------------
+
