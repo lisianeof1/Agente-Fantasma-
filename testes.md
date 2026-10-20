@@ -176,7 +176,7 @@ Saída observada:
 
 ### Observação sobre a seleção dos cenários
 
-As três consultas selecionam explicitamente o cenário por meio de `executar(Cenario)`. Assim, os testes confirmam a seleção explícita de cada cenário. A consulta direta do padrão inicial `cenario_ativo(X).`, antes de escolher um cenário, ainda precisa ser registrada separadamente.
+As três consultas selecionam explicitamente o cenário por meio de `executar(Cenario)`. Assim, os testes confirmam a seleção explícita de cada cenário. A consulta direta `cenario_ativo(C).`, executada sem selecionar outro cenário antes, retornou `C = desafiador`. O cenário padrão foi confirmado.
 
 ### Repetição do teste de saída
 
