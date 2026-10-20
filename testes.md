@@ -39,17 +39,19 @@ Foi utilizada uma lista de ações contendo movimentos entre cômodos, uma açã
 
 O resultado apresentou as ações em linguagem natural, o custo informado e a mensagem de conclusão. Como o plano foi fornecido manualmente, esse teste verificou somente a apresentação dos resultados, não a validade do plano calculada pelo agente.
 
-## 3. Testes ainda pendentes
+## 3. Situação dos testes integrados
 
-Os seguintes testes serão realizados após a integração dos arquivos de cenários, regras, busca e saída:
+Os testes integrados foram executados no SWISH em 20/10/2026, com as regras, os cenários, a busca e a saída reais. Nenhum resultado foi simulado.
 
-- Verificar se a busca encontra uma solução válida para o cenário simples.
-- Verificar se a busca encontra uma solução válida para o cenário desafiador.
-- Verificar se a busca termina sem solução para o cenário impossível.
-- Conferir se o custo apresentado corresponde ao custo retornado pela busca.
-- Conferir se todas as ações do plano são traduzidas corretamente.
-- Verificar se o resultado final confirma a fuga de todos os moradores.
-- Registrar as consultas e saídas reais do programa integrado.
+| Cenário | Consulta | Resultado observado |
+|---|---|---|
+| Simples | `executar(simples).` | Passou. A busca retornou um plano de 5 ações, custo acumulado 8 e mensagem de vitória. |
+| Desafiador | `executar(desafiador).` | Passou. A busca retornou um plano de 10 ações, custo acumulado 14 e mensagem de vitória. |
+| Impossível | `executar(impossivel).` | Passou. A busca não encontrou solução e exibiu a mensagem de ausência de solução. |
+
+Os planos e as conferências de energia e susto estão registrados na seção 7. A seleção explícita dos três cenários foi testada. A consulta direta do cenário padrão, sem chamar `definir_cenario/1`, ainda não foi registrada.
+
+**Ponto para confirmar com Juliana:** as regras atuais só permitem `remover/1` e `arrombar/1` a partir do cômodo de origem declarado. Os planos integrados passaram sem depender da extremidade oposta. Como as conexões são direcionadas, confirmar com Juliana se essa restrição também é a regra desejada para essas ações. Nenhuma alteração foi feita em `regras.pl`.
 
 ## 4. Testes individuais das traduções de ações
 
@@ -91,7 +93,7 @@ Sequência proposta:
 
 Com os custos e os valores de susto definidos no projeto, a sequência gasta 8 unidades de energia e termina com 2 unidades disponíveis. Maria recebe 3 pontos de susto ao ser atingida pelo primeiro objeto, chega a 5 pontos após o barulho e foge ao receber o susto do segundo objeto, considerando o bônus por tremor e o limite de 8 pontos.
 
-**Situação:** viabilidade verificada manualmente; falta validar o resultado com a busca integrada.
+**Situação:** sequência de referência conferida manualmente e também validada pelo plano da busca integrada, registrado na seção 7.
 
 ### Cenário desafiador
 
@@ -111,12 +113,74 @@ Sequência proposta:
 
 Com os custos e os valores de susto propostos, o custo acumulado das ações é de 14 unidades de energia. O fantasma começa com 10 unidades, recupera 5 no espelho e termina com 1 unidade disponível. Ana e Bruno chegam ao limiar de fuga após o barulho, considerando o bônus por tremor e o limite de 8 pontos.
 
-**Situação:** viabilidade verificada manualmente, condicionada à implementação correta da abertura da porta especial e da atualização dos sustos. Falta validar o resultado com a busca integrada.
+**Situação:** sequência de referência conferida manualmente e também validada pelo plano da busca integrada, registrado na seção 7.
 
 ### Observação
 
 Essas sequências são planejamentos manuais para conferir a viabilidade dos cenários. Elas não são resultados produzidos pelo algoritmo de busca.
 
+## 7. Testes integrados com a busca real
+
+**Data:** 20/10/2026  
+**Ambiente:** SWISH (Prolog no navegador)  
+**Tipo:** teste integrado, usando a busca e as regras reais.
+
+### Cenário simples
+
+**Consulta:** `executar(simples).`
+
+A busca retornou 5 ações, custo acumulado 8 e exibiu a mensagem de vitória.
+
+Plano observado:
+1. Mover da sala para o corredor.
+2. Mover do corredor para a cozinha.
+3. Fazer barulho na cozinha.
+4. Derrubar o vaso na cozinha.
+5. Derrubar o brinquedo na cozinha.
+
+Na conferência do plano, Maria recebe 2 pontos com o barulho, chega a 5 após o vaso e atinge o limite de fuga com o brinquedo, considerando o bônus por tremor e o máximo de 8 pontos. O plano gasta 8 unidades e deixa 2 de energia.
+
+**Resultado:** passou. A busca encontrou um plano válido para o cenário simples.
+
+### Cenário desafiador
+
+**Consulta:** `executar(desafiador).`
+
+A busca retornou 10 ações, custo acumulado 14 e exibiu a mensagem de vitória.
+
+Plano observado:
+1. Derrubar o quadro-chave e abrir a porta do quarto.
+2. Mover da sala para o corredor.
+3. Remover o armário.
+4. Mover do corredor para a cozinha.
+5. Mover da cozinha para a biblioteca.
+6. Usar o espelho na biblioteca.
+7. Mover da biblioteca para o quarto.
+8. Fazer barulho no quarto.
+9. Derrubar o vaso do quarto.
+10. Derrubar o livro do quarto.
+
+Na conferência do plano, Ana e Bruno recebem 2 pontos com o barulho, chegam a 5 após o vaso e atingem o limite de fuga com o livro, considerando o bônus por tremor e o máximo de 8 pontos. O custo acumulado é 14. O espelho recupera energia sem reduzir esse custo, e o fantasma termina com 1 unidade de energia.
+
+**Resultado:** passou. A busca encontrou um plano válido para o cenário desafiador.
+
+### Cenário impossível
+
+**Consulta:** `executar(impossivel).`
+
+Saída observada:
+
+> Nao foi encontrada uma sequencia de acoes capaz de fazer todos os moradores fugirem neste cenario.
+
+**Resultado:** passou. A busca terminou sem solução e não exibiu mensagem de vitória.
+
+### Observação sobre a seleção dos cenários
+
+As três consultas selecionam explicitamente o cenário por meio de `executar(Cenario)`. Assim, os testes confirmam a seleção explícita de cada cenário. A consulta direta do padrão inicial `cenario_ativo(X).`, antes de escolher um cenário, ainda precisa ser registrada separadamente.
+
+### Repetição do teste de saída
+
+Após incluir cortes nas traduções de ações conhecidas, a apresentação do plano foi testada novamente. As frases e a numeração permaneceram iguais; ao pedir outra resposta no SWISH, não apareceu a mensagem genérica de ação sem tradução.
 
 ## 8. Teste da saída condicionada ao cenário ativo
 
@@ -142,4 +206,4 @@ A saída em linguagem natural foi aprimorada para numerar as ações e informar 
 | Contagem das ações | Informar a quantidade de elementos do plano | Passou. A quantidade de ações foi apresentada corretamente. |
 | Apresentação completa | Mostrar plano, quantidade de ações, custo e mensagem de conclusão | Passou. Todas as informações foram exibidas corretamente. |
 
-O teste utilizou uma lista de ações e um custo fornecidos manualmente. A busca real ainda precisa ser integrada para validar o resultado produzido pelo agente.
+O teste desta seção utilizou uma lista de ações e um custo fornecidos manualmente, portanto verificou apenas a apresentação. Os resultados da busca real estão registrados na seção 7.
