@@ -18,7 +18,7 @@
 % ETAPAS:
 %   [x] 1. Arquivos base e atalhos do cenario ativo
 %   [x] 2. estado_inicial/1 e objetivo/1
-%   [ ] 3. porta_aberta/2 e bloqueada/3
+%   [x] 3. porta_aberta/2, bloqueada/3 e passagem_livre/3
 %   [ ] 4. acoes sem susto: mover, usar, remover, arrombar
 %   [ ] 5. susto: distancia, pontos e atualizacao de Sustos
 %   [ ] 6. acoes de susto: barulho e derrubar
@@ -107,6 +107,43 @@ estado_inicial(estado(Comodo, Energia, Sustos, [])) :-
 objetivo(estado(_, _, Sustos, _)) :-
     param(susto_max, Max),
     forall(member(_-Pontos, Sustos), Pontos >= Max).
+
+% ---------------------------------------------------------------------
+% ETAPA 3: portas, moveis e passagem livre
+% ---------------------------------------------------------------------
+% Porta aberta e movel removido NAO tem registro proprio no estado.
+% O programa descobre olhando a lista Feitos.
+
+%% porta_aberta(+Porta, +Feitos)
+%  Uma porta esta aberta se:
+%    - ela foi arrombada, ou
+%    - o objeto que a abre (objeto com efeito abre(Porta)) ja foi derrubado.
+porta_aberta(Porta, Feitos) :-
+    memberchk(arrombada(Porta), Feitos).
+porta_aberta(Porta, Feitos) :-
+    objeto(Objeto, _, abre(Porta)),
+    memberchk(derrubado(Objeto), Feitos).
+
+%% bloqueada(+De, +Para, +Feitos)
+%  A passagem De -> Para esta bloqueada se:
+%    - existe uma porta nela que ainda nao foi aberta, ou
+%    - existe um movel nela que ainda nao foi removido.
+%  O bloqueio vale so no sentido cadastrado: uma porta/movel de De para
+%  Para NAO bloqueia a volta (Para -> De), a menos que o cenario cadastre
+%  tambem a volta.
+bloqueada(De, Para, Feitos) :-
+    porta(Porta, De, Para),
+    \+ porta_aberta(Porta, Feitos).
+bloqueada(De, Para, Feitos) :-
+    movel(Movel, De, Para),
+    \+ memberchk(removido(Movel), Feitos).
+
+%% passagem_livre(+De, +Para, +Feitos)
+%  O fantasma pode ir de De para Para: a ligacao existe e nada bloqueia.
+%  (E esta regra que a acao mover/2 usara na etapa 4.)
+passagem_livre(De, Para, Feitos) :-
+    conecta(De, Para),
+    \+ bloqueada(De, Para, Feitos).
 
 % ---------------------------------------------------------------------
 % (as proximas etapas entram aqui)
