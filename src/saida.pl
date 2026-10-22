@@ -1,16 +1,6 @@
 % ==========================================
 % SAIDA EM LINGUAGEM NATURAL
 % ==========================================
-% Este arquivo traduz as acoes e apresenta os resultados da busca.
-% Tambem mostra os comodos e as passagens do cenario antes do plano.
-%
-% Para selecionar e executar um cenario, use:
-%   executar(simples).
-%   executar(desafiador).
-%   executar(impossivel).
-%
-% Para executar o cenario que ja esta ativo, use:
-%   executar.
 
 % ==========================================
 % TRADUCAO DAS ACOES
