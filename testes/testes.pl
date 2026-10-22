@@ -1,15 +1,3 @@
-% =====================================================================
-% testes.pl  --  Etapa 8: testes das regras (Pessoa 2)
-% =====================================================================
-% Como rodar (na pasta com todos os arquivos):
-%     swipl -q -s testes.pl -g rodar_testes -t halt
-% ou, dentro do swipl:
-%     ?- [testes].
-%     ?- rodar_testes.
-%
-% Cada teste imprime "ok" ou "FALHOU". No fim sai o total.
-% Precisa de: config.pl, regras.pl, cenario_teste.pl, cenario_teste2.pl
-
 :- ensure_loaded(regras).
 :- ensure_loaded(cenario_teste).
 :- ensure_loaded(cenario_teste2).
@@ -124,7 +112,7 @@ nao_permite(E0, Acao) :-
 
 :- assertz((teste(mover_sem_conexao_falha) :-
     definir_cenario(teste),
-    \+ passagem_livre(corredor, sala, []),     % conexao nao e de volta
+    \+ passagem_livre(corredor, sala, []),    
     nao_permite(estado(corredor, 10, [ana-0], []), mover(corredor, sala)))).
 
 % ---------------------------------------------------------------------
@@ -174,9 +162,9 @@ nao_permite(E0, Acao) :-
     distancia(quarto, quarto, 0),
     distancia(corredor, quarto, 1),
     distancia(sala, quarto, 2),
-    \+ distancia(cozinha, quarto, _),                  % 3 passagens: fora do alcance
+    \+ distancia(cozinha, quarto, _),                 
     definir_cenario(teste),
-    \+ distancia(quarto, corredor, _))).               % so existe a ida
+    \+ distancia(quarto, corredor, _))).               
 
 :- assertz((teste(pontos_conforme_tabela) :-
     pontos_susto(barulho, 0, 2), pontos_susto(barulho, 1, 1),
@@ -209,24 +197,24 @@ nao_permite(E0, Acao) :-
     definir_cenario(teste),
     passo(estado(quarto, 10, [ana-0], []), barulho(quarto), E1, 2),
     E1 == estado(quarto, 8, [ana-2], [barulho(quarto)]),
-    nao_permite(E1, barulho(quarto)),                  % so uma vez por comodo
+    nao_permite(E1, barulho(quarto)),                 
     passo(estado(corredor, 10, [ana-0], []), barulho(corredor), E2, 2),
     E2 == estado(corredor, 8, [ana-1], [barulho(corredor)]),
-    nao_permite(estado(quarto, 1, [ana-0], []), barulho(quarto)),     % sem energia
-    nao_permite(estado(sala, 10, [ana-0], []), barulho(quarto)))).    % outro comodo
+    nao_permite(estado(quarto, 1, [ana-0], []), barulho(quarto)),    
+    nao_permite(estado(sala, 10, [ana-0], []), barulho(quarto)))).    
 
 :- assertz((teste(barulho_inutil_nao_e_permitido) :-
     definir_cenario(teste),
-    nao_permite(estado(sala, 10, [ana-0], []), barulho(sala)),        % dist 2 = 0
-    nao_permite(estado(quarto, 10, [ana-8], []), barulho(quarto)))).  % ja fugiu
+    nao_permite(estado(sala, 10, [ana-0], []), barulho(sala)),        
+    nao_permite(estado(quarto, 10, [ana-8], []), barulho(quarto)))).  
 
 :- assertz((teste(derrubar_basico) :-
     definir_cenario(teste),
     passo(estado(quarto, 10, [ana-0], []), derrubar(vaso), E1, 2),
     E1 == estado(quarto, 8, [ana-3], [derrubado(vaso)]),
     nao_permite(E1, derrubar(vaso)),                   % so uma vez
-    nao_permite(estado(corredor, 10, [ana-0], []), derrubar(vaso)),   % outro comodo
-    nao_permite(estado(quarto, 1, [ana-0], []), derrubar(vaso)))).    % sem energia
+    nao_permite(estado(corredor, 10, [ana-0], []), derrubar(vaso)),   
+    nao_permite(estado(quarto, 1, [ana-0], []), derrubar(vaso)))).    
 
 :- assertz((teste(derrubar_objeto_chave_sem_morador_por_perto) :-
     definir_cenario(teste2),
