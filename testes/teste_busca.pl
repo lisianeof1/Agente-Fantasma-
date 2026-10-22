@@ -1,11 +1,3 @@
-% ============================================================
-% testa busca.pl com mapas pequenos, sem o jogo.
-%
-% Os estados sao apenas letras e as acoes sao escritas a mao.
-% Para rodar:  swipl teste_busca.pl
-% (cada linha ":- testar(...)" executa ao carregar o arquivo)
-% ============================================================
-
 :- consult('busca.pl').
 
 % estado_inicial/1 e objetivo/1 mudam a cada teste
