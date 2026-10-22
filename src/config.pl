@@ -1,6 +1,4 @@
 % =====================================================================
-% config.pl  --  Valores configuraveis do Agente Fantasma (Pessoa 2)
-% =====================================================================
 %   param(Nome, Valor)   -> valores gerais
 %   custo(Acao, Valor)   -> energia gasta por cada tipo de acao
 %   base_susto(Acao, V)  -> pontos-base de susto de cada acao
